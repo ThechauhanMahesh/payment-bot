@@ -44,9 +44,10 @@ class PayPal:
         
 
 class BlockBee:
-    def __init__(self, api_key: str, bot_username: str) -> None:
+    def __init__(self, api_key: str, bot_username: str, webhook_url: str) -> None:
         self.api_key = api_key  
         self.bot_username = bot_username
+        self.webhook_url = webhook_url
         logging.debug("BlockBee client configured")
 
     async def create_link(self, user_id: int, amount: int, duration: int) -> str:
@@ -57,7 +58,8 @@ class BlockBee:
                 "value": amount,
                 "currency": "USD",
                 "item_description": "DroneBots subscription",
-                "post": "0"
+                "post": "1", 
+                "notify_url": f"{self.webhook_url}/crypto/{user_id}/{duration}"
             }
             async with session.get("https://api.blockbee.io/checkout/request/", params=params) as response:
                 data = await response.json()

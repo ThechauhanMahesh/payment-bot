@@ -29,6 +29,7 @@ paypal_client = PayPal(
     mode="live"
 )
 blockbee_client = BlockBee(
+    webhook_url=constants.WEBHOOK_URL,
     api_key=constants.BLOCKBEE_API_KEY, 
-    bot_username=constants.BOT_USERNAME
+    bot_username=constants.BOT_USERNAME, 
 )
