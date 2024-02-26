@@ -1,15 +1,27 @@
-from main import bot, paypal_client
-from telethon import events, Button 
-from telethon.events.callbackquery import CallbackQuery
+from pyrogram import filters, Client 
+from main import paypal_client, blockbee_client
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 
-@bot.on(events.CallbackQuery(pattern=r"paypal\|(\d+)\|(\d+)"))
-async def crypto(event: CallbackQuery.Event):
-    amount = int(event.pattern_match.group(1))
-    days = int(event.pattern_match.group(2))
-    await event.edit("Generating PayPal link...", buttons=None)
-    link = paypal_client.create_link(event.sender_id, amount, days)
+@Client.on_callback_query(filters.regex(r"paypal\|(\d+)\|(\d+)"))
+async def paypal_handler(_, cb: CallbackQuery):
+    await cb.answer("Generating checkout link...", show_alert=True)
+    amount = int(cb.matches[0].group(1))
+    days = int(cb.matches[0].group(2))
+    link = paypal_client.create_link(cb.from_user.id, amount, days)
     if not link:
-        await event.edit("Failed to generate PayPal link :(")
+        await cb.answer("Failed to generate PayPal link :(")
         return 
-    await event.edit(f"Pay {amount}$ ", buttons=Button.url("Pay", link))
+    await cb.edit_message_text(f"Pay {amount}$ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))
+
+
+@Client.on_callback_query(filters.regex(r"crypto\|(\d+)\|(\d+)"))
+async def crypto_handler(_, cb: CallbackQuery):
+    await cb.answer("Generating checkout link...", show_alert=True)
+    amount = int(cb.matches[0].group(1))
+    days = int(cb.matches[0].group(2))
+    link = await blockbee_client.create_link(cb.from_user.id, amount, days)
+    if not link:
+        await cb.edit_message_text("Failed to generate crypto link :(")
+        return
+    await cb.edit_message_text(f"Pay {amount}$ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))

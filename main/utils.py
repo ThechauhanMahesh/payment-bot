@@ -1,19 +1,7 @@
-import sys
-import logging
-import constants 
-import importlib
+import logging 
+import aiohttp 
 import paypalrestsdk 
-from pathlib import Path
 
-def load_plugins(plugin_name):
-    path = Path(f"main/plugins/{plugin_name}.py")
-    name = "main.plugins.{}".format(plugin_name)
-    spec = importlib.util.spec_from_file_location(name, path)
-    load = importlib.util.module_from_spec(spec)
-    load.logger = logging.getLogger(plugin_name)
-    spec.loader.exec_module(load)
-    sys.modules["main.plugins." + plugin_name] = load
-    print("main has Imported " + plugin_name)
 
 
 class PayPal:
@@ -23,8 +11,8 @@ class PayPal:
             "client_id": client_id,
             "client_secret": client_secret,
         })
-
         self.bot_username = bot_username
+        logging.debug("PayPal client configured")
 
     def create_link(self, user_id: int, amount: int, duration: int) -> str:
         payment = paypalrestsdk.Payment({
@@ -47,8 +35,31 @@ class PayPal:
         })
 
         if payment.create():
+            logging.info(f"PayPal reposnse: {payment}")
             for req_link in payment.links:
                 if req_link.method == "REDIRECT":
                     return req_link.href
         else:
             return None 
+        
+
+class BlockBee:
+    def __init__(self, api_key: str, bot_username: str) -> None:
+        self.api_key = api_key  
+        self.bot_username = bot_username
+        logging.debug("BlockBee client configured")
+
+    async def create_link(self, user_id: int, amount: int, duration: int) -> str:
+        async with aiohttp.ClientSession() as session:
+            params = {
+                "apikey": self.api_key,
+                "redirect_url": f"https://t.me/{self.bot_username}",
+                "value": amount,
+                "currency": "USD",
+                "item_description": "DroneBots subscription",
+                "post": "0"
+            }
+            async with session.get("https://api.blockbee.io/checkout/request/", params=params) as response:
+                data = await response.json()
+                logging.info(f"BlockBee response: {data}")
+                return data.get("payment_url", None)  

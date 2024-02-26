@@ -12,3 +12,6 @@ BOT_USERNAME = config("BOT_USERNAME", default=None)
 # PayPal
 PAYPAL_CLIENT_ID = config("PAYPAL_CLIENT_ID", default=None)
 PAYPAL_CLIENT_SECRET = config("PAYPAL_CLIENT_SECRET", default=None)
+
+# BlockBee
+BLOCKBEE_API_KEY = config("BLOCKBEE_API_KEY", default=None)

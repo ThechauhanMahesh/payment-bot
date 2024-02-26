@@ -1,7 +1,8 @@
+import json
 from aiohttp import web
+from main import routes, bot 
 from datetime import datetime 
 
-routes = web.RouteTableDef()
 
 @routes.post('/paypal')
 async def get_handler(request):
@@ -14,14 +15,15 @@ async def get_handler(request):
         user_id, duration = transaction_data['custom'].split("|")
     
         print(f"User {user_id} has paid for {duration} days ({amount}$)")
-        # add data in database here 
-        # user_id is user's id 
-        # durtaion is the duration of the subscription
-        # created_at is when the payment was confirmed
+        await bot.send_message(int(user_id), f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
+        #! handle database thing here 
         return web.Response(text="*ok*")
 
 
-if __name__ == "__main__":
-    app = web.Application()
-    app.add_routes(routes)
-    web.run_app(app, host="0.0.0.0", port=8080)
+@routes.post("/crypto")
+async def crypto_handler(request):
+    data = await request.text()
+    json_data = json.loads(data)
+
+    #TODO! handle data here 
+    return web.Response(status=200)
