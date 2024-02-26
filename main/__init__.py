@@ -26,7 +26,7 @@ paypal_client = PayPal(
     client_id=constants.PAYPAL_CLIENT_ID,
     client_secret=constants.PAYPAL_CLIENT_SECRET,
     bot_username=constants.BOT_USERNAME,
-    mode="sandbox"
+    mode="live"
 )
 blockbee_client = BlockBee(
     api_key=constants.BLOCKBEE_API_KEY, 
