@@ -83,15 +83,16 @@ async def upi_handler(request):
 
     ending_on = created_at + timedelta(days=duration)
 
-    data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
-    await db.update_user(user_id=user_id, data=data_to_add)
-    logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
-    try:
-        await bot.send_message(constants.LOGS_CHAT_ID, parse_log_message(
-                date=created_at, user_id=user_id, amount=amount, 
-                plan=plan, duration=duration, ends_on=ending_on, 
-                mode="upi"
-            ))  
-        await bot.send_message(user_id, f"Your payment of {amount}₹ has been received, your subscription has been extended by {duration} days.")
-    except: pass 
+    if data.get('status') == "success":
+        data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
+        await db.update_user(user_id=user_id, data=data_to_add)
+        logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
+        try:
+            await bot.send_message(constants.LOGS_CHAT_ID, parse_log_message(
+                    date=created_at, user_id=user_id, amount=amount, 
+                    plan=plan, duration=duration, ends_on=ending_on, 
+                    mode="upi"
+                ))  
+            await bot.send_message(user_id, f"Your payment of {amount}₹ has been received, your subscription has been extended by {duration} days.")
+        except: pass 
     return web.Response(status=200)
