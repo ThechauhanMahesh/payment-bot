@@ -18,7 +18,7 @@ async def show_options(_, message: Union[Message, CallbackQuery]):
             [
                 [
                     InlineKeyboardButton("Basic", "plan|basic"), 
-                    InlineKeyboardButton("Basic x3", "plan|basicx3")                    
+                    InlineKeyboardButton("Basic X3", "plan|basicx3")                    
                 ], 
                 [InlineKeyboardButton("Monthly", "plan|monthly")],
                 [InlineKeyboardButton("Pro", "plan|pro")]
