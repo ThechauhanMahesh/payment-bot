@@ -73,7 +73,7 @@ async def paypal_handler(request):
 @routes.post("/upi")
 async def upi_handler(request):
     data = await request.post()
-    logger.debug(data)
+    logger.info(data)
 
     created_at = datetime.utcnow().date()
     amount = int(data.get("amount"))

@@ -13,6 +13,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("bot.log", "w"), logging.StreamHandler()],
     level=logging.INFO
 )
+
 logger = logging.getLogger(__name__)
 
 bot = Client(

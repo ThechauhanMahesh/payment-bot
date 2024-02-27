@@ -13,8 +13,8 @@ class Database:
         logging.debug("Database client configured")
 
     async def update_user(self, user_id: int, data: dict) -> None:
-        return await self.db.users.update_one(
-            {"user_id": user_id},
+        return await self.users.update_one(
+            {"id": user_id},
             {"$set": data},
             upsert=True
         )

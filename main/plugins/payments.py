@@ -34,10 +34,10 @@ async def show_plans(_, cb: CallbackQuery):
         await cb.edit_message_text(f"{plan_data.get('title')}\n\n{plan_data.get('description')}\n\nChoose payment mode : ", reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("UPI ₹", f"payments|upi|{plan}"),
-                    InlineKeyboardButton("PayPal $", f"payments|paypal|{plan}"),
+                    InlineKeyboardButton(f"UPI {plan_data.get('price', {}).get('upi', {}).get('amount')} ₹", f"payments|upi|{plan}"),
+                    InlineKeyboardButton(f"PayPal {plan_data.get('price', {}).get('paypal', {}).get('amount')} $", f"payments|paypal|{plan}"),
                 ],[
-                    InlineKeyboardButton("Crypto $", f"payments|crypto|{plan}"),
+                    InlineKeyboardButton(f"Crypto {plan_data.get('price', {}).get('crypto', {}).get('amount')} $", f"payments|crypto|{plan}"),
                     InlineKeyboardButton("Other", url=constants.CONTACT_USERNAME)
                 ], 
                 [InlineKeyboardButton("Back", "plans")]
