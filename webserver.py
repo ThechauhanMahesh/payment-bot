@@ -23,7 +23,7 @@ async def crypto_handler(request):
     duration = int(args_data.get('duration'))
     ending_on = created_at + timedelta(days=duration)
 
-    data_to_update = {"dos": created_at, "doe": ending_on, "plan":plan}
+    data_to_update = {"dos": str(created_at), "doe": str(ending_on), "plan":plan}
 
     if data.get('is_paid') == "1":
         logger.info(f"[Crypto] Payment of {amount}$ received from user {user_id} for {duration} days.")
@@ -56,7 +56,7 @@ async def paypal_handler(request):
 
     ending_on = created_at + timedelta(days=duration)
 
-    data_to_add = {"dos": created_at, "doe": ending_on, "plan": plan}
+    data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
     await db.update_user(user_id=int(user_id), data=data_to_add)
 
     logger.info(f"[PayPal] Payment of {amount}$ received from user {user_id} for {duration} days.")
@@ -83,7 +83,7 @@ async def upi_handler(request):
 
     ending_on = created_at + timedelta(days=duration)
 
-    data_to_add = {"dos": created_at, "doe": ending_on, "plan": plan}
+    data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
     await db.update_user(user_id=user_id, data=data_to_add)
     logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
     try:
