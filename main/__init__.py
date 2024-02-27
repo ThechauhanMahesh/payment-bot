@@ -1,6 +1,7 @@
 #ChauhanMahesh/Vasusen/DroneBots/COL
 
 import logging
+import asyncio 
 import constants 
 from aiohttp import web
 from pyrogram import Client 
@@ -13,6 +14,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("bot.log", "w"), logging.StreamHandler()],
     level=logging.INFO
 )
+logger = logging.getLogger(__name__)
 
 bot = Client(
     name='bot', 
@@ -23,13 +25,14 @@ bot = Client(
 )
 
 paypal_client = PayPal(
+    mode="live", 
+    server_url=constants.SERVER_URL,
+    bot_username=constants.BOT_USERNAME,
     client_id=constants.PAYPAL_CLIENT_ID,
     client_secret=constants.PAYPAL_CLIENT_SECRET,
-    bot_username=constants.BOT_USERNAME,
-    mode="live"
 )
 blockbee_client = BlockBee(
-    webhook_url=constants.WEBHOOK_URL,
+    webhook_url=constants.SERVER_URL,
     api_key=constants.BLOCKBEE_API_KEY, 
     bot_username=constants.BOT_USERNAME, 
 )
