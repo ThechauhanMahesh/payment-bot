@@ -1,5 +1,5 @@
 from pyrogram import filters, Client 
-from main import paypal_client, blockbee_client
+from main import paypal_client, blockbee_client, upi_client
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 
@@ -25,3 +25,14 @@ async def crypto_handler(_, cb: CallbackQuery):
         await cb.edit_message_text("Failed to generate crypto link :(")
         return
     await cb.edit_message_text(f"Pay {amount}$ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))
+
+@Client.on_callback_query(filters.regex(r"upi\|(\d+)\|(\d+)"))
+async def upi_handler(_, cb: CallbackQuery):
+    await cb.answer("Generating checkout link...", show_alert=True)
+    amount = int(cb.matches[0].group(1))
+    days = int(cb.matches[0].group(2))
+    link = await upi_client.create_link(cb.from_user.id, amount, days)
+    if not link:
+        await cb.edit_message_text("Failed to generate UPI link :(")
+        return
+    await cb.edit_message_text(f"Pay {amount}₹ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))

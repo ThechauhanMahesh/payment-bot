@@ -1,7 +1,5 @@
 from decouple import config
 
-
-
 # Basics
 API_ID = config("API_ID", default=None, cast=int)
 API_HASH = config("API_HASH", default=None)
@@ -16,3 +14,6 @@ PAYPAL_CLIENT_SECRET = config("PAYPAL_CLIENT_SECRET", default=None)
 # BlockBee
 BLOCKBEE_API_KEY = config("BLOCKBEE_API_KEY", default=None)
 SERVER_URL = config("SERVER_URL", default=None)
+
+# UPI
+UPI_API_KEY = config("UPI_API_KEY", default=None)

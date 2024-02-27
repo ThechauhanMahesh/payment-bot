@@ -25,7 +25,7 @@ async def crypto_handler(request):
     return web.Response(status=200)
 
 @routes.get("/paypal")
-async def index(request):
+async def paypal_handler(request):
     logger.debug(request.rel_url.query)
     params = request.rel_url.query
 
@@ -43,3 +43,18 @@ async def index(request):
     logger.info(f"[PayPal] Payment of {amount}$ received from user {user_id} for {duration} days.")
     await bot.send_message(int(user_id), f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
     return web.HTTPFound(f"https://t.me/{constants.BOT_USERNAME}")
+
+@routes.post("/upi")
+async def upi_handler(request):
+    data = await request.post()
+    logger.debug(data)
+
+    created_at = datetime.utcnow()
+    amount = int(data.get("amount"))
+    user_id = int(data.get("udf1"))
+    duration = int(data.get("udf2"))
+
+    #! handle database thing here
+    logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
+    await bot.send_message(user_id, f"Your payment of {amount}₹ has been received, your subscription has been extended by {duration} days.")
+    return web.Response(status=200)

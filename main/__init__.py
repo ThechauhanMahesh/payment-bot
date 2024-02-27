@@ -5,7 +5,7 @@ import asyncio
 import constants 
 from aiohttp import web
 from pyrogram import Client 
-from .utils import PayPal, BlockBee
+from .utils import PayPal, BlockBee, UPI
 
 routes = web.RouteTableDef()
 
@@ -35,4 +35,9 @@ blockbee_client = BlockBee(
     webhook_url=constants.SERVER_URL,
     api_key=constants.BLOCKBEE_API_KEY, 
     bot_username=constants.BOT_USERNAME, 
+)
+
+upi_client = UPI(
+    api_key=constants.UPI_API_KEY,
+    bot_username=constants.BOT_USERNAME,
 )
