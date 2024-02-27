@@ -5,6 +5,27 @@ from aiohttp import web
 from datetime import datetime, timedelta 
 from main import routes, bot, logger, db
 
+
+list_of_bots = """
+**USE ANY OF THESE BOTS**
+
+DC 4 server based 🇩🇪
+
+➤  @PremiumSRCB5_Bot 
+➤  @PremiumSRCB4_Bot
+➤  @PremiumSRCB3_Bot
+
+DC 1 server based 🇺🇸
+
+⚠️ Use DC 1 bots only if you get slow download speed (less than 1mb/s)
+
+➤  @PremiumSRCB1_Bot
+➤  @PremiumSRCB2_Bot 
+
+**For updates related to paid bots join @PremiumSRCB ✅**
+"""
+
+
 def parse_log_message(date: datetime.date, user_id: int, amount: int, plan: str, duration: int, ends_on: datetime.date, mode: str):
     return f"`{user_id}` paid {amount} {'₹' if mode == 'upi' else '$'} on {date} for {plan}.\nExtended {duration} days and subscription ends on {ends_on}"
 
@@ -35,6 +56,7 @@ async def crypto_handler(request):
                 mode="crypto"
             ))
             await bot.send_message(user_id, f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
+            await bot.send_message(user_id, list_of_bots)
         except: pass 
 
     return web.Response(status=200)
