@@ -15,7 +15,7 @@ class Database:
     async def update_user(self, user_id: int, data: dict) -> None:
         return await self.users.update_one(
             {"id": user_id},
-            {"$set": data},
+            {"$set": {"data":data}},
             upsert=True
         )
 
