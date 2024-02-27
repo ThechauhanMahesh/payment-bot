@@ -32,7 +32,7 @@ class PayPal:
         logging.debug("PayPal client configured")
 
 
-    def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
         payment = paypalrestsdk.Payment({
             "intent": "sale",
             "payer": {
