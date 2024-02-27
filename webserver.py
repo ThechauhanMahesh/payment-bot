@@ -89,6 +89,7 @@ async def paypal_handler(request):
                 mode="paypal"
             )) 
         await bot.send_message(int(user_id), f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
+        await bot.send_message(user_id, list_of_bots)
     except: pass 
     return web.HTTPFound(f"https://t.me/{constants.BOT_USERNAME}")
 
@@ -116,5 +117,6 @@ async def upi_handler(request):
                     mode="upi"
                 ))  
             await bot.send_message(user_id, f"Your payment of {amount}₹ has been received, your subscription has been extended by {duration} days.")
+            await bot.send_message(user_id, list_of_bots)
         except: pass 
     return web.Response(status=200)
