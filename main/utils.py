@@ -1,8 +1,23 @@
-from uuid import uuid4
 import logging 
 import aiohttp 
+import urllib.parse
 import paypalrestsdk 
+from uuid import uuid4
+from motor.motor_asyncio import AsyncIOMotorClient
 
+class Database:
+    def __init__(self, uri: str, database_name: str) -> None:
+        self._client = AsyncIOMotorClient(uri)
+        self.db = self._client[database_name]
+        self.users = self.db.users
+        logging.debug("Database client configured")
+
+    async def update_user(self, user_id: int, data: dict) -> None:
+        return await self.db.users.update_one(
+            {"user_id": user_id},
+            {"$set": data},
+            upsert=True
+        )
 
 
 class PayPal:
@@ -17,7 +32,7 @@ class PayPal:
         logging.debug("PayPal client configured")
 
 
-    def create_link(self, user_id: int, amount: int, duration: int) -> str:
+    def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
         payment = paypalrestsdk.Payment({
             "intent": "sale",
             "payer": {
@@ -33,7 +48,7 @@ class PayPal:
                     "currency": "USD"
                 },
                 "description": "DroneBots subscription",
-                "custom": f"{user_id}|{duration}",
+                "custom": f"{user_id}|{duration}|{plan}",
             }], 
             "note_to_payer": "Contact us for any questions on your order.", 
             "application_context": {
@@ -60,16 +75,18 @@ class BlockBee:
         self._url = "https://api.blockbee.io/checkout/request/"
         logging.debug("BlockBee client configured")
 
-    async def create_link(self, user_id: int, amount: int, duration: int) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
         async with aiohttp.ClientSession() as session:
+            arguments = {"user_id": user_id, "duration": duration, "plan": plan}
+            
             params = {
                 "apikey": self.api_key,
                 "redirect_url": f"https://t.me/{self.bot_username}",
                 "value": amount,
                 "currency": "USD",
                 "item_description": "DroneBots subscription",
-                "post": "1", 
-                "notify_url": f"{self.webhook_url}/crypto/{user_id}/{duration}"
+                "notify_url": f"{self.webhook_url}/crypto?" + urllib.parse.urlencode(arguments), 
+                "post": "1"
             }
             async with session.get(self._url, params=params) as response:
                 data = await response.json()
@@ -84,7 +101,7 @@ class UPI:
         self._url = "https://api.ekqr.in/api/create_order"
         logging.debug("UPI client configured")
 
-    async def create_link(self, user_id: int, amount: int, duration: int) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
         txnid = str(uuid4())
         headers = {'Content-Type': 'application/json'}
         amount = str(amount)
@@ -101,7 +118,7 @@ class UPI:
             redirect_url=f"https://t.me/{self.bot_username}",
             udf1=user_id,
             udf2=duration,
-            udf3="",
+            udf3=plan,
         )
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.post(self._url, json=json_data) as response:

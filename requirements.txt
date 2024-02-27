@@ -1,6 +1,5 @@
-python-decouple
-# telethon
-pyrogram
-
-paypalrestsdk
+motor 
 aiohttp 
+pyrogram
+paypalrestsdk
+python-decouple

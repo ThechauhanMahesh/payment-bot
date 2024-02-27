@@ -1,38 +1,89 @@
+import asyncio 
+import constants
+from typing import Union 
 from pyrogram import filters, Client 
 from main import paypal_client, blockbee_client, upi_client
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery, Message
 
 
-@Client.on_callback_query(filters.regex(r"paypal\|(\d+)\|(\d+)"))
-async def paypal_handler(_, cb: CallbackQuery):
-    await cb.answer("Generating checkout link...", show_alert=True)
-    amount = int(cb.matches[0].group(1))
-    days = int(cb.matches[0].group(2))
-    link = paypal_client.create_link(cb.from_user.id, amount, days)
-    if not link:
-        await cb.answer("Failed to generate PayPal link :(")
-        return 
-    await cb.edit_message_text(f"Pay {amount}$ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))
+@Client.on_callback_query(filters.regex(r"plans"))
+@Client.on_message(filters.regex(r"^/pay$") & filters.private)
+async def show_options(_, message: Union[Message, CallbackQuery]):
+    if isinstance(message, Message): function = message.reply_text
+    else: function = message.edit_message_text
 
+    await function(
+        "Select a plan.",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("Basic", "plan|basic"), 
+                    InlineKeyboardButton("Basic x3", "plan|basicx3")                    
+                ], 
+                [InlineKeyboardButton("Monthly", "plan|monthly")],
+                [InlineKeyboardButton("Pro", "plan|pro")]
+            ]
+        )
+    )
 
-@Client.on_callback_query(filters.regex(r"crypto\|(\d+)\|(\d+)"))
-async def crypto_handler(_, cb: CallbackQuery):
-    await cb.answer("Generating checkout link...", show_alert=True)
-    amount = int(cb.matches[0].group(1))
-    days = int(cb.matches[0].group(2))
-    link = await blockbee_client.create_link(cb.from_user.id, amount, days)
-    if not link:
-        await cb.edit_message_text("Failed to generate crypto link :(")
+@Client.on_callback_query(filters.regex(r"plan\|(.+)"))
+async def show_plans(_, cb: CallbackQuery):
+    plan = cb.matches[0].group(1)
+    try: 
+        plan_data = constants.plans[plan]
+        await cb.edit_message_text(f"{plan_data.get('title')}\n\n{plan_data.get('description')}\n\nChoose payment mode : ", reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("UPI ₹", f"payments|upi|{plan}"),
+                    InlineKeyboardButton("PayPal $", f"payments|paypal|{plan}"),
+                ],[
+                    InlineKeyboardButton("Crypto $", f"payments|crypto|{plan}"),
+                    InlineKeyboardButton("Other", url=constants.CONTACT_USERNAME)
+                ], 
+                [InlineKeyboardButton("Back", "plans")]
+            ]
+        ))
+    except KeyError:
+        await cb.answer("Plan not available!", show_alert=True)
         return
-    await cb.edit_message_text(f"Pay {amount}$ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))
+    
 
-@Client.on_callback_query(filters.regex(r"upi\|(\d+)\|(\d+)"))
-async def upi_handler(_, cb: CallbackQuery):
-    await cb.answer("Generating checkout link...", show_alert=True)
-    amount = int(cb.matches[0].group(1))
-    days = int(cb.matches[0].group(2))
-    link = await upi_client.create_link(cb.from_user.id, amount, days)
-    if not link:
-        await cb.edit_message_text("Failed to generate UPI link :(")
+@Client.on_callback_query(filters.regex(r"payments\|(.+)\|(.+)"))
+async def handle_payment_cb(_, cb: CallbackQuery):
+    payment_mode = cb.matches[0].group(1)
+    plan = cb.matches[0].group(2)
+
+    try:
+        plan_data = constants.plans[plan]
+        payment_data = plan_data["price"][payment_mode]
+    except KeyError:
+        await cb.answer("Plan not available!", show_alert=True)
         return
-    await cb.edit_message_text(f"Pay {amount}₹ ", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Pay", url=link)]]))
+    
+    if payment_mode == "upi":
+        client = upi_client
+    elif payment_mode == "paypal":
+        client = paypal_client
+    elif payment_mode == "crypto":
+        client = blockbee_client
+    else:
+        await cb.answer("Invalid payment mode!", show_alert=True)
+        return
+    
+    link = await client.create_link(user_id=cb.from_user.id, amount=payment_data.get("amount"), duration=plan_data.get("duration"), plan=plan)
+    if not link:
+        await cb.answer("Failed to generate checkout link :(", show_alert=True)
+        return
+    
+    message = await cb.edit_message_text(f"Pay {payment_data.get('amount')} {payment_data.get('symbol')} for {plan_data.get('title')} plan.", reply_markup=InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(f"Pay {payment_data.get('amount')} {payment_data.get('symbol')}", url=link),
+                InlineKeyboardButton("Cancel", "plans")
+            ]
+        ]
+    ))
+    await asyncio.sleep(5 * 60) # 5 mins sleep 
+    try: 
+        await message.delete()
+    except: pass 

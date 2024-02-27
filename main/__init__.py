@@ -1,11 +1,10 @@
 #ChauhanMahesh/Vasusen/DroneBots/COL
 
 import logging
-import asyncio 
 import constants 
 from aiohttp import web
 from pyrogram import Client 
-from .utils import PayPal, BlockBee, UPI
+from .utils import PayPal, BlockBee, UPI, Database
 
 routes = web.RouteTableDef()
 
@@ -23,7 +22,10 @@ bot = Client(
     bot_token=constants.BOT_TOKEN, 
     plugins=dict(root="main/plugins")
 )
-
+db = Database(
+    uri=constants.MONGODB_URL,
+    database_name=constants.DATABASE_NAME
+)
 paypal_client = PayPal(
     mode="live", 
     server_url=constants.SERVER_URL,
