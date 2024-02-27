@@ -60,7 +60,7 @@ plans = {
     },
     "pro": {
         "title": "Pro Plan", 
-        "description": "✅ All features of basic plan\n✅ /batch (auto save) upto 150 messages\n✅ Supports file size upto 4gb\n✅ Timer of 2 seconds only\n✅ Add/delete/replace text in captions",
+        "description": "✅ All features of basic plan\n✅ /batch (auto save) upto 100 messages\n✅ Supports file size upto 4gb\n✅ Timer of 2 seconds only\n✅ Add/delete/replace text in captions",
         "price":{
             "upi" : {
                 "amount": 450, 
