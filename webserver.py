@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from main import routes, bot, logger, db
 
 def parse_log_message(date: datetime.date, user_id: int, amount: int, plan: str, duration: int, ends_on: datetime.date, mode: str):
-    return f"{user_id} paid {amount} {'₹' if mode == 'upi' else '$'} on {date} for {plan}.\nExtended {duration} days and subscription ends on {ends_on}"
+    return f"`{user_id}` paid {amount} {'₹' if mode == 'upi' else '$'} on {date} for {plan}.\nExtended {duration} days and subscription ends on {ends_on}"
 
 
 @routes.post("/crypto")
