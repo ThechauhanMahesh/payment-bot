@@ -76,7 +76,7 @@ async def paypal_handler(request):
     amount = payment['transactions'][0]['amount']['total']
     user_id, duration, plan = payment['transactions'][0]['custom'].split("|")
 
-    ending_on = created_at + timedelta(days=duration)
+    ending_on = created_at + timedelta(days=int(duration))
 
     data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
     await db.update_user(user_id=int(user_id), data=data_to_add)
