@@ -15,7 +15,18 @@ class Database:
     async def update_user(self, user_id: int, data: dict) -> None:
         return await self.users.update_one(
             {"id": user_id},
-            {"$set": {"data":data}},
+            {
+                "$set": {"data":data}, 
+                "$setOnInsert": dict(
+                    banned=False, 
+                    api_id=None, 
+                    api_hash=None, 
+                    session=None, 
+                    chat=None, 
+                    process={"process":False, "batch":False}, 
+                    caption={"action":None, "string":None}
+                )
+            },
             upsert=True
         )
 
