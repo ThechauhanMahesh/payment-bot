@@ -17,11 +17,11 @@ async def show_options(_, message: Union[Message, CallbackQuery]):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("Basic", "plan|basic"), 
-                    InlineKeyboardButton("Basic X3", "plan|basicx3")                    
+                    InlineKeyboardButton("BASIC 🥉 ", "plan|basic"), 
+                    InlineKeyboardButton("BASIC X 3 🥉", "plan|basicx3")                    
                 ], 
-                [InlineKeyboardButton("Monthly", "plan|monthly")],
-                [InlineKeyboardButton("Pro", "plan|pro")]
+                [InlineKeyboardButton("MONTHLY 🥈", "plan|monthly")],
+                [InlineKeyboardButton("PRO 🥇", "plan|pro")]
             ]
         )
     )
@@ -34,11 +34,11 @@ async def show_plans(_, cb: CallbackQuery):
         await cb.edit_message_text(f"{plan_data.get('title')}\n\n{plan_data.get('description')}\n\nChoose payment mode : ", reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(f"UPI {plan_data.get('price', {}).get('upi', {}).get('amount')} ₹", f"payments|upi|{plan}"),
-                    InlineKeyboardButton(f"PayPal {plan_data.get('price', {}).get('paypal', {}).get('amount')} $", f"payments|paypal|{plan}"),
+                    InlineKeyboardButton(f"🇮🇳 UPI {plan_data.get('price', {}).get('upi', {}).get('amount')} ₹", f"payments|upi|{plan}"),
+                    InlineKeyboardButton(f"💳 PayPal {plan_data.get('price', {}).get('paypal', {}).get('amount')} $", f"payments|paypal|{plan}"),
                 ],[
-                    InlineKeyboardButton(f"Crypto {plan_data.get('price', {}).get('crypto', {}).get('amount')} $", f"payments|crypto|{plan}"),
-                    InlineKeyboardButton("Other", url=constants.CONTACT_USERNAME)
+                    InlineKeyboardButton(f"🪙 Crypto {plan_data.get('price', {}).get('crypto', {}).get('amount')} $", f"payments|crypto|{plan}"),
+                    InlineKeyboardButton("👤 Other", url=constants.CONTACT_USERNAME)
                 ], 
                 [InlineKeyboardButton("Back", "plans")]
             ]
