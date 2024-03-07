@@ -1,5 +1,15 @@
 from decouple import config
 
+START_TEXT = """
+If you want to make a payment for subscription,
+Send /pay to @SubscriptionForBot ✅
+
+यदि आप subscription के लिए भुगतान करना चाहते हैं,
+@SubscriptionForBot ✅ पर /pay भेजें
+
+Read our T&C before any purchase"""
+
+
 plans = {
     "basic": {
         "title": "Basic Plan", 
