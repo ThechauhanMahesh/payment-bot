@@ -1,5 +1,7 @@
 motor 
+pandas
 aiohttp 
 pyrogram
+tgcrypto
 paypalrestsdk
 python-decouple

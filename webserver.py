@@ -2,8 +2,8 @@ import datetime
 import constants 
 import paypalrestsdk
 from aiohttp import web
-from datetime import datetime, timedelta 
 from main import routes, bot, logger, db
+from datetime import datetime, timedelta, UTC
 
 
 list_of_bots = """
@@ -37,7 +37,7 @@ async def crypto_handler(request):
     data = await request.post()
     logger.debug(data, args_data)
 
-    created_at = datetime.utcnow().date()
+    created_at = datetime.now(tz=UTC).date()
     plan = args_data.get('plan')
     amount = round(float(data.get("value")), 2)
     user_id = int(args_data.get('user_id'))
@@ -55,6 +55,7 @@ async def crypto_handler(request):
                 plan=plan, duration=duration, ends_on=ending_on, 
                 mode="crypto"
             ))
+            await db.add_stats(amount, "crypto")
             await bot.send_message(user_id, f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
             await bot.send_message(user_id, list_of_bots)
         except: pass 
@@ -72,7 +73,7 @@ async def paypal_handler(request):
     payment = paypalrestsdk.Payment.find(payment_id)
     payment.execute({"payer_id": payer_id})
 
-    created_at = datetime.utcnow().date()
+    created_at = datetime.now(tz=UTC).date()
     amount = payment['transactions'][0]['amount']['total']
     user_id, duration, plan = payment['transactions'][0]['custom'].split("|")
 
@@ -80,6 +81,7 @@ async def paypal_handler(request):
 
     data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
     await db.update_user(user_id=int(user_id), data=data_to_add)
+    await db.add_stats(amount, "paypal")
 
     logger.info(f"[PayPal] Payment of {amount}$ received from user {user_id} for {duration} days.")
     try:
@@ -98,7 +100,7 @@ async def upi_handler(request):
     data = await request.post()
     logger.debug(data)
 
-    created_at = datetime.utcnow().date()
+    created_at = datetime.now(tz=UTC).date()
     amount = int(data.get("amount"))
     user_id = int(data.get("udf1"))
     duration = int(data.get("udf2"))
@@ -110,6 +112,8 @@ async def upi_handler(request):
         data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
         await db.update_user(user_id=user_id, data=data_to_add)
         logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
+        await db.add_stats(amount, "upi")
+
         try:
             await bot.send_message(constants.LOGS_CHAT_ID, parse_log_message(
                     date=created_at, user_id=user_id, amount=amount, 

@@ -114,3 +114,6 @@ MONGODB_URL = config("MONGODB_URL", default=None)
 TAC_URL = "https://github.com/vasusen-code/Terms-Conditions/blob/main/README.md"
 CONTACT_USERNAME = "https://t.me/ChauhanMahesh_Bot"
 LOGS_CHAT_ID = config("LOGS_CHAT_ID", default=None)
+
+
+DOLLAR_RATE = 83

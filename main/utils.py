@@ -1,8 +1,10 @@
 import logging 
 import aiohttp 
+import constants 
 import urllib.parse
 import paypalrestsdk 
 from uuid import uuid4
+from datetime import datetime, UTC
 from motor.motor_asyncio import AsyncIOMotorClient
 
 class Database:
@@ -10,6 +12,7 @@ class Database:
         self._client = AsyncIOMotorClient(uri)
         self.db = self._client[database_name]
         self.users = self.db.users
+        self.stats = self.db.stats
         logging.debug("Database client configured")
 
     async def update_user(self, user_id: int, data: dict) -> None:
@@ -30,6 +33,42 @@ class Database:
             upsert=True
         )
 
+    async def add_stats(self, amount: int, payment_mode: str):
+        return await self.stats.update_one(
+            {"date": datetime.now(tz=UTC).today()},
+            {"$inc": {payment_mode: amount}},
+            upsert=True
+        )
+
+
+    async def get_transactions(self, from_date, to_date):
+        pipeline = [
+            {
+                '$match': {'date': {'$gte': from_date, '$lte': to_date}}
+            },
+            {
+                '$group': {
+                    '_id': {'$dateToString': {'format': '%d-%m-%Y', 'date': '$date'}}, 
+                    'Crypto': {'$sum': '$crypto'}, 
+                    'UPI': {'$sum': '$upi'}, 
+                    'PayPal': {'$sum': '$paypal'}
+                }
+            },
+            {
+                '$addFields': {
+                    'total': {
+                        '$add': [
+                            {'$multiply': ['$PayPal', constants.DOLLAR_RATE]},
+                            {'$multiply': ['$Crypto', constants.DOLLAR_RATE]},
+                            '$UPI'
+                        ]
+                    }
+                }
+            }
+        ]
+        cursor = self.stats.aggregate(pipeline)
+        return await cursor.to_list(None)
+    
 
 class PayPal:
     def __init__(self, client_id: str, client_secret: str, bot_username: str, server_url: str, mode: str = "live"):
