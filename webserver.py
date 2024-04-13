@@ -3,8 +3,9 @@ import constants
 import paypalrestsdk
 from aiohttp import web
 from main import routes, bot, logger, db
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 
+UTC = timezone.utc
 
 list_of_bots = """
 **USE ANY OF THESE BOTS**
