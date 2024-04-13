@@ -1,5 +1,6 @@
 import io 
 import random 
+import constants 
 from main import db 
 import pandas as np 
 from datetime import datetime
@@ -7,7 +8,7 @@ from pyrogram.types import Message
 from pyrogram import filters, Client, enums
 
 
-@Client.on_message(filters.command(r"date"))
+@Client.on_message(filters.command(r"date") & filters.chat(constants.ADMINS))
 async def show_date(_, message: Message):
     try:
         _, from_date, to_date = message.text.split(" ")
@@ -20,14 +21,14 @@ async def show_date(_, message: Message):
     if not transactions: return await message.reply("No transactions found.")
 
     data = np.DataFrame(transactions)
-    data.columns = ['Date', 'Crypto', 'UPI', 'PayPal', 'Total Amount']
+    data.columns = ['Date', 'Crypto', 'PayPal', 'UPI', 'Total Amount']
 
     total_sum = data['Total Amount'].sum()
 
     with io.BytesIO() as output:
         data.to_csv(output, index=False)
         output.name = "transactions.csv"
-        x = await message.reply_document(output, caption=f"Total amount: {total_sum} ₹")
+        x = await message.reply_document(output, caption=f"Total amount: {'{:,}'.format(round(total_sum, 3))} ₹")
         await x.reply_animation(
             animation=random.choice([
                 'https://i.pinimg.com/originals/c7/f4/08/c7f4085f145b758feac4e1d471b665a0.gif', 

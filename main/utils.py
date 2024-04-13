@@ -32,40 +32,35 @@ class Database:
             },
             upsert=True
         )
+    
+    def deduct_fees(self, input_amount, values):
+        closest_key = max((key for key in values if key <= input_amount), default=None)
+        if closest_key :
+            return values[closest_key]
+        return 0 
 
     async def add_stats(self, amount: int, payment_mode: str):
-        return await self.stats.update_one(
-            {"date": datetime.now(tz=UTC).today()},
+        if payment_mode in ['paypal', 'crypto']:
+            amount = self.deduct_fees(amount, constants.FEES[payment_mode])
+
+        return  await self.stats.update_one(
+            {"date": str(datetime.now(tz=UTC).date())},
             {"$inc": {payment_mode: amount}},
             upsert=True
         )
 
-
     async def get_transactions(self, from_date, to_date):
         pipeline = [
-            {
-                '$match': {'date': {'$gte': from_date, '$lte': to_date}}
-            },
-            {
-                '$group': {
-                    '_id': {'$dateToString': {'format': '%d-%m-%Y', 'date': '$date'}}, 
-                    'Crypto': {'$sum': '$crypto'}, 
-                    'UPI': {'$sum': '$upi'}, 
-                    'PayPal': {'$sum': '$paypal'}
-                }
-            },
-            {
-                '$addFields': {
-                    'total': {
-                        '$add': [
-                            {'$multiply': ['$PayPal', constants.DOLLAR_RATE]},
-                            {'$multiply': ['$Crypto', constants.DOLLAR_RATE]},
-                            '$UPI'
-                        ]
-                    }
-                }
-            }
+            {'$match': { 'date': {'$gte': str(from_date), '$lte': str(to_date)}}},
+            {'$set': {
+                'crypto': {'$multiply': ['$crypto', constants.DOLLAR_RATE]},
+                'paypal': {'$multiply': ['$paypal', constants.DOLLAR_RATE]}
+            }},
+            {'$set': {'total': {'$add': ['$crypto', '$paypal', '$upi']}}},
+            {'$project': {'_id': 0}},
+            {'$sort': {'date': 1}}
         ]
+
         cursor = self.stats.aggregate(pipeline)
         return await cursor.to_list(None)
     

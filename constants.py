@@ -10,6 +10,21 @@ Send /pay to @SubscriptionForBot ✅
 Read our T&C before any purchase"""
 
 
+FEES = {
+    "crypto":{
+        8: 7.79,
+        6: 5.84,
+        4: 3.83,
+        2: 1.85
+    }, 
+    "paypal": {
+        8: 7.23,
+        6: 5.34,
+        4: 3.43,
+        2: 1.54
+    }
+}
+
 plans = {
     "basic": {
         "title": "Basic Plan", 
@@ -88,6 +103,8 @@ plans = {
         "duration": 30,
     }
 }
+
+ADMINS = [1807573686]
 
 # Basics
 API_ID = config("API_ID", default=None, cast=int)
