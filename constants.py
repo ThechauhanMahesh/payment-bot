@@ -107,7 +107,7 @@ plans = {
     "uploader":{
         "premuim":{
             "title": "PREMIUM ⚡️", 
-            "description": "✅Unlimited links \n✅No waiting period 🕐\n✅High speed upload 🚀\n✅Validity of 30 days",
+            "description": "✅Unlimited links \n✅No waiting period\n✅High speed upload\n✅Validity of 30 days",
             "price":{
                 "upi" : {
                     "amount": 125, 
