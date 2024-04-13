@@ -29,7 +29,7 @@ plans = {
     "save_restricted":{
         "basic": {
             "title": "Basic Plan", 
-            "description": "✅ Invite link not needed\n✅ High speed upload\n✅ Unlimited links both public and private\n✅ forwards from bots too\n✅ Public and private chats supported\n✅ Timer of only 10 seconds\n✅ Save content directly into your channel/group",
+            "description": "✅ Invite link not needed\n✅ High speed upload\n✅ Unlimited links both public and private\n✅ forwards from bots too\n✅ Public and private chats supported\n✅ Timer of only 10 seconds\n✅ Save content directly into your channel/group\n\n 10 days validity.",
             "price":{
                 "upi" : {
                     "amount": 100, 
@@ -106,8 +106,8 @@ plans = {
     }, 
     "uploader":{
         "premuim":{
-            "title": "Premium Plan", 
-            "description": "PREMIUM PLAN ⚡️\n\n- Unlimited links 🔗\n- No waiting period 🕐\n- High speed upload 🚀\n- Validity of 30 days 🎁",
+            "title": "PREMIUM Plan", 
+            "description": "✅Unlimited links \n✅No waiting period 🕐\n✅High speed upload 🚀\n✅Validity of 30 days",
             "price":{
                 "upi" : {
                     "amount": 125, 
