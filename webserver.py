@@ -42,13 +42,14 @@ async def crypto_handler(request):
     amount = round(float(data.get("value")), 2)
     user_id = int(args_data.get('user_id'))
     duration = int(args_data.get('duration'))
+    bot = args_data.get('bot')
     ending_on = created_at + timedelta(days=duration)
 
     data_to_update = {"dos": str(created_at), "doe": str(ending_on), "plan":plan}
 
     if data.get('is_paid') == "1":
         logger.info(f"[Crypto] Payment of {amount}$ received from user {user_id} for {duration} days.")
-        await db.update_user(user_id=user_id, data=data_to_update)
+        await db.update_user(user_id=user_id, data=data_to_update, bot=bot)
         try: 
             await bot.send_message(constants.LOGS_CHAT_ID, parse_log_message(
                 date=created_at, user_id=user_id, amount=amount, 
@@ -75,12 +76,12 @@ async def paypal_handler(request):
 
     created_at = datetime.now(tz=UTC).date()
     amount = payment['transactions'][0]['amount']['total']
-    user_id, duration, plan = payment['transactions'][0]['custom'].split("|")
+    user_id, duration, plan, bot = payment['transactions'][0]['custom'].split("|")
 
     ending_on = created_at + timedelta(days=int(duration))
 
     data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
-    await db.update_user(user_id=int(user_id), data=data_to_add)
+    await db.update_user(user_id=int(user_id), data=data_to_add, bot=bot)
     await db.add_stats(amount, "paypal")
 
     logger.info(f"[PayPal] Payment of {amount}$ received from user {user_id} for {duration} days.")
@@ -104,13 +105,13 @@ async def upi_handler(request):
     amount = int(data.get("amount"))
     user_id = int(data.get("udf1"))
     duration = int(data.get("udf2"))
-    plan = data.get("udf3")
+    plan, bot = data.get("udf3").split("|")
 
     ending_on = created_at + timedelta(days=duration)
 
     if data.get('status') == "success":
         data_to_add = {"dos": str(created_at), "doe": str(ending_on), "plan": plan}
-        await db.update_user(user_id=user_id, data=data_to_add)
+        await db.update_user(user_id=user_id, data=data_to_add, bot=bot)
         logger.info(f"[UPI] Payment of {amount}₹ received from user {user_id} for {duration} days.")
         await db.add_stats(amount, "upi")
 

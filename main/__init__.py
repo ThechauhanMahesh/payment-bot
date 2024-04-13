@@ -23,9 +23,10 @@ bot = Client(
     bot_token=constants.BOT_TOKEN, 
     plugins=dict(root="main/plugins")
 )
+
 db = Database(
     uri=constants.MONGODB_URL,
-    database_name=constants.DATABASE_NAME
+    db_data=constants.DATABASE_DICT
 )
 paypal_client = PayPal(
     mode="live", 

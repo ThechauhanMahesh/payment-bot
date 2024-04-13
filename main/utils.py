@@ -7,28 +7,22 @@ from uuid import uuid4
 from datetime import datetime, UTC
 from motor.motor_asyncio import AsyncIOMotorClient
 
+
 class Database:
-    def __init__(self, uri: str, database_name: str) -> None:
+    def __init__(self, uri: str, db_data: dict) -> None:
+        self.db_dict = db_data
         self._client = AsyncIOMotorClient(uri)
-        self.db = self._client[database_name]
-        self.users = self.db.users
-        self.stats = self.db.stats
+        self.stats = self._client.stats.stats
         logging.debug("Database client configured")
 
-    async def update_user(self, user_id: int, data: dict) -> None:
-        return await self.users.update_one(
+    async def update_user(self, user_id: int, data: dict, bot: str) -> None:
+        data = self.db_dict[bot]
+        db = self._client[data["db"]][data["collection"]]
+        return await db.update_one(
             {"id": user_id},
             {
                 "$set": {"data":data}, 
-                "$setOnInsert": dict(
-                    banned=False, 
-                    api_id=None, 
-                    api_hash=None, 
-                    session=None, 
-                    chat=None, 
-                    process={"process":False, "batch":False}, 
-                    caption={"action":None, "string":None}
-                )
+                "$setOnInsert": data.get('defaults')
             },
             upsert=True
         )
@@ -77,7 +71,7 @@ class PayPal:
         logging.debug("PayPal client configured")
 
 
-    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str, bot: str) -> str:
         payment = paypalrestsdk.Payment({
             "intent": "sale",
             "payer": {
@@ -93,7 +87,7 @@ class PayPal:
                     "currency": "USD"
                 },
                 "description": "DroneBots subscription",
-                "custom": f"{user_id}|{duration}|{plan}",
+                "custom": f"{user_id}|{duration}|{plan}|{bot}",
             }], 
             "note_to_payer": "Contact us for any questions on your order.", 
             "application_context": {
@@ -120,9 +114,9 @@ class BlockBee:
         self._url = "https://api.blockbee.io/checkout/request/"
         logging.debug("BlockBee client configured")
 
-    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str, bot: str) -> str:
         async with aiohttp.ClientSession() as session:
-            arguments = {"user_id": user_id, "duration": duration, "plan": plan}
+            arguments = {"user_id": user_id, "duration": duration, "plan": plan, "bot": bot}
             
             params = {
                 "apikey": self.api_key,
@@ -146,7 +140,7 @@ class UPI:
         self._url = "https://api.ekqr.in/api/create_order"
         logging.debug("UPI client configured")
 
-    async def create_link(self, user_id: int, amount: int, duration: int, plan: str) -> str:
+    async def create_link(self, user_id: int, amount: int, duration: int, plan: str, bot: str) -> str:
         txnid = str(uuid4())
         headers = {'Content-Type': 'application/json'}
         amount = str(amount)
@@ -163,7 +157,7 @@ class UPI:
             redirect_url=f"https://t.me/{self.bot_username}",
             udf1=user_id,
             udf2=duration,
-            udf3=plan,
+            udf3=f"{plan}|{bot}",
         )
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.post(self._url, json=json_data) as response:
