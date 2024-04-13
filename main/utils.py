@@ -4,8 +4,9 @@ import constants
 import urllib.parse
 import paypalrestsdk 
 from uuid import uuid4
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
+UTC = timezone.utc
 
 
 class Database:
