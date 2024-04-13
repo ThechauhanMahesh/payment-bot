@@ -28,7 +28,7 @@ FEES = {
 plans = {
     "save_restricted":{
         "basic": {
-            "title": "Basic Plan", 
+            "title": "BASIC 🥉", 
             "description": "✅ Invite link not needed\n✅ High speed upload\n✅ Unlimited links both public and private\n✅ forwards from bots too\n✅ Public and private chats supported\n✅ Timer of only 10 seconds\n✅ Save content directly into your channel/group\n\n 10 days validity.",
             "price":{
                 "upi" : {
@@ -47,7 +47,7 @@ plans = {
             "duration": 10,
         }, 
         "basicx3":{
-            "title": "Basic x3 Plan", 
+            "title": "BASIC X 3 🥉", 
             "description": "✅ all features of basic plan for a month",
             "price":{
                 "upi" : {
@@ -66,7 +66,7 @@ plans = {
             "duration": 30,
         },
         "monthly": {
-            "title": "Monthly Plan", 
+            "title": "MONTHLY 🥈", 
             "description": "✅ All features of basic plan\n✅ /batch (auto save) upto 30 messages",
             "price":{
                 "upi" : {
@@ -85,7 +85,7 @@ plans = {
             "duration": 30,
         },
         "pro": {
-            "title": "Pro Plan", 
+            "title": "PRO 🥇", 
             "description": "✅ All features of basic plan\n✅ /batch (auto save) upto 100 messages\n✅ Supports file size upto 4gb\n✅ Timer of 2 seconds only\n✅ Add/delete/replace text in captions",
             "price":{
                 "upi" : {
@@ -106,7 +106,7 @@ plans = {
     }, 
     "uploader":{
         "premuim":{
-            "title": "PREMIUM Plan", 
+            "title": "PREMIUM ⚡️", 
             "description": "✅Unlimited links \n✅No waiting period 🕐\n✅High speed upload 🚀\n✅Validity of 30 days",
             "price":{
                 "upi" : {
