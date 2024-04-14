@@ -6,8 +6,8 @@ import paypalrestsdk
 from uuid import uuid4
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
-UTC = timezone.utc
 
+UTC = timezone.utc
 
 class Database:
     def __init__(self, uri: str, db_data: dict) -> None:
@@ -19,9 +19,16 @@ class Database:
     async def update_user(self, user_id: int, data: dict, bot: str) -> None:
         db_data = self.db_dict[bot]
         db = self._client[db_data["db"]][db_data["collection"]]
+
+        if bot == "uploader":
+            filter = {"_id": user_id}
+        elif bot == "save_restricted":
+            filter = {"id": user_id}            
+        else:
+            raise ValueError("Failed to process payment for unknown bot")
   
         return await db.update_one(
-            {"_id": user_id},
+            filter,
             {
                 "$set": {"data":data}, 
                 "$setOnInsert": db_data.get('defaults')
