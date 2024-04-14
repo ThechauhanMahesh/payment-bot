@@ -104,18 +104,18 @@ plans = {
     "uploader":{
         "premium":{
             "title": "PREMIUM ⚡️", 
-            "description": "✅Unlimited links \n✅No waiting period\n✅High speed upload\n✅Validity of 30 days",
+            "description": "- Unlimited links 🔗 \n- Upload directly to telegram ✈️\n- High upload speed 🚀\n- Multiple Bots 🤖\n- Upload terabox file size over 100 mb 🗃️\n- No waiting period ⏰",
             "price":{
                 "upi" : {
-                    "amount": 125, 
+                    "amount": 99, 
                     "symbol": "₹"
                 }, 
                 "crypto":{
-                    "amount": 3, 
+                    "amount": 2, 
                     "symbol": "$"
                 }, 
                 "paypal":{
-                    "amount": 3, 
+                    "amount": 2, 
                     "symbol": "$"
                 }
             }, 
