@@ -17,13 +17,13 @@ class Database:
         logging.debug("Database client configured")
 
     async def update_user(self, user_id: int, data: dict, bot: str) -> None:
-        data = self.db_dict[bot]
-        db = self._client[data["db"]][data["collection"]]
+        db_data = self.db_dict[bot]
+        db = self._client[db_data["db"]][db_data["collection"]]
         return await db.update_one(
             {"id": user_id},
             {
                 "$set": {"data":data}, 
-                "$setOnInsert": data.get('defaults')
+                "$setOnInsert": db_data.get('defaults')
             },
             upsert=True
         )
