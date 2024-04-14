@@ -15,9 +15,9 @@ uploader_bot_msg = """
 message_content = {
     "uploader" : """
 @MultiUrlUploaderBot 
+@Terabox_downloader_1bot
 
 Subscription have been added!
-Use /plan in the bot to know more details.
 """, 
     "save_restricted" : """
 **USE ANY OF THESE BOTS**
