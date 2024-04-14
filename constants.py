@@ -130,7 +130,6 @@ ADMINS = [1807573686]
 # Basics
 API_ID = "4796990"
 API_HASH = "32b6f41a4bf740efed2d4ce911f145c7"
-
 BOT_TOKEN = "6306813630:AAEdMg_Zwsv6mgpDwGF38p__vrY62ldxn3w"
 
 BOT_USERNAME = "subscriptionforbot"
@@ -146,7 +145,7 @@ SERVER_URL = "https://payments.dronebots.in"
 # UPI
 UPI_API_KEY = "084c4db3-05da-4438-b689-06459a349c66"
 
-DATABASE_NAME = "PremiumSRCB"
+# Database
 MONGODB_URL = "mongodb+srv://thechauhanmahesh:XgbFpSEe3pM9P45z@cluster0.mkaomd0.mongodb.net"
 
 DATABASE_DICT = {
