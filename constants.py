@@ -1,5 +1,3 @@
-from decouple import config
-
 START_TEXT = """
 If you want to make a payment for subscription,
 Send /pay to @SubscriptionForBot ✅
@@ -8,7 +6,6 @@ Send /pay to @SubscriptionForBot ✅
 @SubscriptionForBot ✅ पर /pay भेजें
 
 Read our T&C before any purchase"""
-
 
 FEES = {
     "crypto":{
@@ -131,28 +128,36 @@ plans = {
 ADMINS = [1807573686]
 
 # Basics
-API_ID = config("API_ID", default=None, cast=int)
-API_HASH = config("API_HASH", default=None)
-BOT_TOKEN = config("BOT_TOKEN", default=None)
+API_ID = "4796990"
+API_HASH = "32b6f41a4bf740efed2d4ce911f145c7"
 
-BOT_USERNAME = config("BOT_USERNAME", default=None)
+BOT_TOKEN = "6306813630:AAEdMg_Zwsv6mgpDwGF38p__vrY62ldxn3w"
+
+BOT_USERNAME = "subscriptionforbot"
 
 # PayPal
-PAYPAL_CLIENT_ID = config("PAYPAL_CLIENT_ID", default=None)
-PAYPAL_CLIENT_SECRET = config("PAYPAL_CLIENT_SECRET", default=None)
+PAYPAL_CLIENT_ID = "Aev6mZhtRujS8zk67Uds5D56a-WQ1Xm6Hu3zVEkNYwIHYUMx0e1shwaRc2uOIJgjCTQNO-fRWGOcyyjG"
+PAYPAL_CLIENT_SECRET = "EKsXruoKqCCsh42vDv9nIXkeGG0RQfGa_HXHYHXb_b3uoktjkA-726htkGxhCaSGgJeXS_eS96p4YE9K"
 
 # BlockBee
-BLOCKBEE_API_KEY = config("BLOCKBEE_API_KEY", default=None)
-SERVER_URL = config("SERVER_URL", default=None)
+BLOCKBEE_API_KEY = "4yaKo6nFrQzaB8rQGkA54DJUYESrdVXi8rtq1XgauHAjCIAs9MYdZQh3X2J38wpq"
+SERVER_URL = "https://payments.dronebots.in"
 
 # UPI
-UPI_API_KEY = config("UPI_API_KEY", default=None)
+UPI_API_KEY = "084c4db3-05da-4438-b689-06459a349c66"
+
+DATABASE_NAME = "PremiumSRCB"
+MONGODB_URL = "mongodb+srv://thechauhanmahesh:XgbFpSEe3pM9P45z@cluster0.mkaomd0.mongodb.net"
 
 DATABASE_DICT = {
     "uploader": {
         "db":"UPL", 
         "collection":"UPL", 
-        "defaults" : {}
+        "defaults" : dict(
+            token=None,
+            chat=None,
+            batch=False, 
+        )
     },
     "save_restricted": {
         "db":"PremiumSRCB", 
@@ -168,12 +173,8 @@ DATABASE_DICT = {
         )
     }
 }
-MONGODB_URL = config("MONGODB_URL", default=None)
 
 # MISC 
 TAC_URL = "https://github.com/vasusen-code/Terms-Conditions/blob/main/README.md"
-CONTACT_USERNAME = "https://t.me/ChauhanMahesh_Bot"
-
-LOGS_CHAT_ID = config("LOGS_CHAT_ID", default=None)
-
-DOLLAR_RATE = 83
+CONTACT_USERNAME = "https://t.me/MaheshChauhanBot"
+LOGS_CHAT_ID = 1807573686

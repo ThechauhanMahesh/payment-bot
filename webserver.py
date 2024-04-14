@@ -7,7 +7,19 @@ from datetime import datetime, timedelta, timezone
 
 UTC = timezone.utc
 
-list_of_bots = """
+uploader_bot_msg = """
+
+"""
+
+
+message_content = {
+    "uploader" : """
+@MultiUrlUploaderBot 
+
+Subscription have been added!
+Use /plan in the bot to know more details.
+""", 
+    "save_restricted" : """
 **USE ANY OF THESE BOTS**
 
 DC 4 server based 🇩🇪
@@ -24,7 +36,8 @@ DC 1 server based 🇺🇸
 ➤  @PremiumSRCB2_Bot 
 
 **For updates related to paid bots join @PremiumSRCB ✅**
-"""
+    """
+}
 
 
 def parse_log_message(date: datetime.date, user_id: int, amount: int, plan: str, duration: int, ends_on: datetime.date, mode: str):
@@ -59,7 +72,7 @@ async def crypto_handler(request):
             ))
             await db.add_stats(amount, "crypto")
             await bot.send_message(user_id, f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
-            await bot.send_message(user_id, list_of_bots)
+            await bot.send_message(user_id, message_content[selected_bot])
         except: pass 
 
     return web.Response(status=200)
@@ -93,7 +106,7 @@ async def paypal_handler(request):
                 mode="paypal"
             )) 
         await bot.send_message(int(user_id), f"Your payment of {amount}$ has been received, your subscription has been extended by {duration} days.")
-        await bot.send_message(user_id, list_of_bots)
+        await bot.send_message(user_id, message_content[selected_bot])
     except: pass 
     return web.HTTPFound(f"https://t.me/{constants.BOT_USERNAME}")
 
@@ -123,6 +136,10 @@ async def upi_handler(request):
                     mode="upi"
                 ))  
             await bot.send_message(user_id, f"Your payment of {amount}₹ has been received, your subscription has been extended by {duration} days.")
-            await bot.send_message(user_id, list_of_bots)
+            await bot.send_message(user_id, message_content[selected_bot])
         except: pass 
+    return web.Response(status=200)
+
+@routes.get("/")
+async def index(request):
     return web.Response(status=200)

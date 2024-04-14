@@ -19,8 +19,9 @@ class Database:
     async def update_user(self, user_id: int, data: dict, bot: str) -> None:
         db_data = self.db_dict[bot]
         db = self._client[db_data["db"]][db_data["collection"]]
+  
         return await db.update_one(
-            {"id": user_id},
+            {"_id": user_id},
             {
                 "$set": {"data":data}, 
                 "$setOnInsert": db_data.get('defaults')
