@@ -17,7 +17,7 @@ message_content = {
 @MultiUrlUploaderBot 
 @Terabox_downloader_1bot
 
-Subscription have been added!
+Subscription have been added!✅
 """, 
     "save_restricted" : """
 **USE ANY OF THESE BOTS**
@@ -35,7 +35,7 @@ DC 1 server based 🇺🇸
 ➤  @PremiumSRCB1_Bot
 ➤  @PremiumSRCB2_Bot 
 
-**For updates related to paid bots join @PremiumSRCB ✅**
+**For updates related to paid bots join @Premium_SRCB ✅**
     """
 }
 
