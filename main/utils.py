@@ -43,7 +43,7 @@ class Database:
         return 0 
 
     async def add_stats(self, amount: int, payment_mode: str):
-        amount = int(amount)
+        amount = float(amount)
         if payment_mode in ['paypal', 'crypto']:
             amount = self.deduct_fees(amount, constants.FEES[payment_mode])
 
