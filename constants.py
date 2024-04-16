@@ -111,11 +111,11 @@ plans = {
                     "symbol": "₹"
                 }, 
                 "crypto":{
-                    "amount": 2, 
+                    "amount": 3, 
                     "symbol": "$"
                 }, 
                 "paypal":{
-                    "amount": 2, 
+                    "amount": 3, 
                     "symbol": "$"
                 }
             }, 
