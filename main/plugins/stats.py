@@ -19,9 +19,9 @@ async def show_date(_, message: Message):
     
     transactions = await db.get_transactions(from_date, to_date)
     if not transactions: return await message.reply("No transactions found.")
-
     data = np.DataFrame(transactions)
-    data.columns = ['Date', 'Crypto', 'PayPal', 'UPI', 'Total Amount']
+
+    data.columns = ['Date', 'UPI', 'Crypto', 'Paypal', 'Total Amount']
 
     total_sum = data['Total Amount'].sum()
 

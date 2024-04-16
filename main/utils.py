@@ -60,10 +60,19 @@ class Database:
                 'crypto': {'$multiply': ['$crypto', constants.DOLLAR_RATE]},
                 'paypal': {'$multiply': ['$paypal', constants.DOLLAR_RATE]}
             }},
-            {'$set': {'total': {'$add': ['$crypto', '$paypal', '$upi']}}},
+            {'$set': {
+                'total': {
+                    '$add': [
+                        {'$ifNull': ['$crypto', 0]}, 
+                        {'$ifNull': ['$paypal', 0]}, 
+                        {'$ifNull': ['$upi', 0]}
+                    ]
+                }
+            }},
             {'$project': {'_id': 0}},
             {'$sort': {'date': 1}}
         ]
+
 
         cursor = self.stats.aggregate(pipeline)
         return await cursor.to_list(None)
