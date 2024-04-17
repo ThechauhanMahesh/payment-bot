@@ -1,3 +1,5 @@
+DOLLAR_RATE = 83
+
 START_TEXT = """
 If you want to make a payment for subscription,
 Send /pay to @SubscriptionForBot ✅
@@ -111,11 +113,11 @@ plans = {
                     "symbol": "₹"
                 }, 
                 "crypto":{
-                    "amount": 2, 
+                    "amount": 3, 
                     "symbol": "$"
                 }, 
                 "paypal":{
-                    "amount": 2, 
+                    "amount": 3, 
                     "symbol": "$"
                 }
             }, 
@@ -125,7 +127,7 @@ plans = {
     }
 }
 
-ADMINS = [1807573686]
+ADMINS = [1807573686, 1801212044]
 
 # Basics
 API_ID = "4796990"
