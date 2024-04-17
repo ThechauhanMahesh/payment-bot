@@ -16,7 +16,7 @@ async def show_bots(_, message: Union[Message, CallbackQuery]):
         "Seelct a bot", 
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("☁️ TeraBox & URL uploader ", "bot|uploader")],
+                [InlineKeyboardButton("☁️ TeraBox Downloader", "bot|uploader")],
                 [InlineKeyboardButton("📥 Save Restricted Content", "bot|save_restricted"),]
             ]
         )
