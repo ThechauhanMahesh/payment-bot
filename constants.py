@@ -20,6 +20,7 @@ FEES = {
         8: 7.23,
         6: 5.34,
         4: 3.43,
+        3: 2.49,
         2: 1.54
     }
 }
@@ -35,7 +36,7 @@ plans = {
                     "symbol": "₹"
                 }, 
                 "crypto":{
-                    "amount": 0.2, 
+                    "amount": 2, 
                     "symbol": "$"
                 }, 
                 "paypal":{
@@ -106,14 +107,14 @@ plans = {
     "uploader":{
         "premium":{
             "title": "PREMIUM ⚡️", 
-            "description": "- Unlimited links 🔗 \n- Upload directly to telegram ✈️\n- High upload speed 🚀\n- Multiple Bots 🤖\n- Upload terabox file size over 100 mb 🗃️\n- No waiting period ⏰",
+            "description": "- Unlimited links 🔗 \n- No waiting period ⏰\n- High upload speed 🚀\n- Multi Client system 🤖\n- Upload directly to telegram ✈️\n- Upload file size over 100 mb 📁\n\n30 days validity",
             "price":{
                 "upi" : {
                     "amount": 99, 
                     "symbol": "₹"
                 }, 
                 "crypto":{
-                    "amount": 3, 
+                    "amount": 2, 
                     "symbol": "$"
                 }, 
                 "paypal":{
