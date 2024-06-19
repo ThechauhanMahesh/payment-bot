@@ -13,9 +13,10 @@ uploader_bot_msg = """
 
 
 message_content = {
-    "uploader" : """
-@MultiUrlUploaderBot 
+    "uploader" : """ 
 @Terabox_downloader_1bot
+@Terabox_Video_Down_Bot
+@Terabox_Vid_down_robot
 
 Subscription have been added!✅
 """, 
